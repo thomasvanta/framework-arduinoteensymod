@@ -1,5 +1,5 @@
 {
-  "name": "framework-arduinoteensy",
+  "name": "framework-arduinoteensymod",
   "version": "1.58.0",
   "description": "Arduino Wiring-based Framework for Teensy boards",
   "keywords": [
@@ -10,6 +10,6 @@
   "homepage": "https://www.arduino.cc/reference/en",
   "repository": {
     "type": "git",
-    "url": "https://github.com/PaulStoffregen/cores"
+    "url": "https://github.com/thomasvanta/TeensyCores"
   }
 }
