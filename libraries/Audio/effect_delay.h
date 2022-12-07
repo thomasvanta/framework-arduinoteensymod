@@ -57,6 +57,14 @@ public:
 		maxblocks = 0;
 		memset(queue, 0, sizeof(queue));
 	}
+	~AudioEffectDelay() override {
+		for (int i = 0; i < DELAY_QUEUE_SIZE; i++) {
+			if (queue[i] != NULL) {
+				release(queue[i]);
+				queue[i] = NULL;
+			}
+		}
+	}
 	void delay(uint8_t channel, float milliseconds) {
 		if (channel >= 8) return;
 		if (milliseconds < 0.0f) milliseconds = 0.0f;
