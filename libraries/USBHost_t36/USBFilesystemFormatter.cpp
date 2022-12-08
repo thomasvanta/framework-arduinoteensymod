@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "utility/USBFilesystemFormatter.h"
+#include "USBFilesystemFormatter.h"
 
 #ifndef DBG_FAIL_MACRO
 #define DBG_FAIL_MACRO
@@ -9,7 +9,7 @@ uint16_t toUpcase(uint16_t chr);
 //=============================================
 #define DBG_FILE "USBFilesystemFormatter.cpp"
 //Set to 0 for debug info
-//#define DBG_Print  0
+#define DBG_Print  0
 #if defined(DBG_Print)
 #define DBGPrintf Serial.printf
 #else
@@ -19,13 +19,10 @@ void inline DBGPrintf(...) {};
 #define PRINT_FORMAT_PROGRESS 1
 #if !PRINT_FORMAT_PROGRESS
 #define writeMsg(str)
-void inline writeMsgF(...) {};
 #elif defined(__AVR__)
 #define writeMsg(str) if (m_pr) m_pr->print(F(str))
-#define writeMsgF if (m_pr) m_pr->printf
 #else  // PRINT_FORMAT_PROGRESS
 #define writeMsg(str) if (m_pr) m_pr->write(str)
-#define writeMsgF if (m_pr) m_pr->printf
 #endif  // PRINT_FORMAT_PROGRESS
 
 //=============================================
@@ -76,7 +73,6 @@ bool USBFilesystemFormatter::formatFAT(USBDrive &dev, USBFilesystem &fs, uint8_t
   bool rtn;
   m_secBuf = secBuf;
   m_pr = pr;
-  writeMsg("Begin format Fat File system\n");
   //m_dev = partVol.blockDevice();
   m_part = part-1;  // convert to 0 biased. 
   
@@ -100,20 +96,18 @@ bool USBFilesystemFormatter::formatFAT(USBDrive &dev, USBFilesystem &fs, uint8_t
   m_mbrLBA = mbrLBA;
   m_mbrPart = mbrPart;
 
-  m_capacityMB = (m_sectorCount + SECTORS_PER_MB - 1)/SECTORS_PER_MB;
-  writeMsgF("Capacity in MB: %u\n", m_capacityMB);
-
-//  m_capacityMB = (uint32_t) (fs.totalSize()/1000000);
+  //m_capacityMB = (m_sectorCount + SECTORS_PER_MB - 1)/SECTORS_PER_MB;
+  m_capacityMB = (uint32_t) (fs.totalSize()/1000000);
   
   if(m_capacityMB > 32768) {
-	  writeMsgF("Volume is greater(%u) than 32MB, Need to format as exFAT!!\n", m_capacityMB);
+	  writeMsg("Volume is greater than 32MB, Need to format as exFAT!!\n");
 	  return false;
   }
   
   bool has_volume_label = fs.mscfs.getVolumeLabel(volName, sizeof(volName));
 
   if (has_volume_label) {
-   writeMsgF("Volume name:(%s)\n", volName);
+   DBGPrintf("Volume name:(%s)", volName);
   }
   DBGPrintf("\nPFsFatFormatter::format................");
   DBGPrintf("Sector Count: %d, Sectors/MB: %d\n", m_sectorCount, SECTORS_PER_MB);
@@ -517,7 +511,6 @@ bool USBFilesystemFormatter::formatExFAT(USBDrive &dev, USBFilesystem &fs, uint8
 
   m_secBuf = secBuf;
   m_pr = pr;
-  writeMsg("Begin format ExFat File system\n");
   //m_dev = partVol.blockDevice();
   //m_part = partVol.part()-1;  // convert to 0 biased. 
   m_part = part-1;  // convert to 0 biased. 
@@ -535,9 +528,6 @@ bool USBFilesystemFormatter::formatExFAT(USBDrive &dev, USBFilesystem &fs, uint8
   m_mbrPart = mbrPart;
   
   bool has_volume_label = fs.mscfs.getVolumeLabel(volName, sizeof(volName));
-  if (has_volume_label) {
-   writeMsgF("Volume name:(%s)\n", volName);
-  }
 
   #if defined(DBG_PRINT)
 	DBGPrintf("    m_sectorsPerCluster:%u\n", fs.mscfs.sectorsPerCluster());

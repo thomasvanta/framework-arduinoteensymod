@@ -78,7 +78,7 @@ void AudioEffectEnvelope::update(void)
 	block = receiveWritable();
 	if (!block) return;
 	if (state == STATE_IDLE) {
-		AudioStream::release(block);
+		release(block);
 		return;
 	}
 	p = (uint32_t *)(block->data);
@@ -177,7 +177,7 @@ void AudioEffectEnvelope::update(void)
 		count--;
 	}
 	transmit(block);
-	AudioStream::release(block);
+	release(block);
 }
 
 bool AudioEffectEnvelope::isActive()

@@ -12,8 +12,6 @@
  * SPI MISO    MISO         12 / ICSP-1   50        D12        ICSP-1           14
  * SPI SCK     SCK          13 / ICSP-3   52        D13        ICSP-3           15
  *
- * More pin layouts for other boards can be found here: https://github.com/miguelbalboa/rfid#pin-layout
- *
  * Hardware required:
  * Arduino
  * PCD (Proximity Coupling Device): NXP MFRC522 Contactless Reader IC
@@ -24,8 +22,8 @@
 #include <SPI.h>
 #include <MFRC522.h>
 
-#define RST_PIN         9           // Configurable, see typical pin layout above
-#define SS_PIN          10          // Configurable, see typical pin layout above
+constexpr uint8_t RST_PIN = 9;     // Configurable, see typical pin layout above
+constexpr uint8_t SS_PIN = 10;     // Configurable, see typical pin layout above
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance
 
@@ -42,7 +40,7 @@ void loop() {
   MFRC522::MIFARE_Key key;
   for (byte i = 0; i < 6; i++) key.keyByte[i] = 0xFF;
 
-  // Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
+  // Look for new cards
   if ( ! mfrc522.PICC_IsNewCardPresent()) {
     return;
   }

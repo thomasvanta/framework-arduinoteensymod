@@ -26,15 +26,13 @@
  * SPI MOSI    MOSI         11 / ICSP-4   51        D11        ICSP-4           16
  * SPI MISO    MISO         12 / ICSP-1   50        D12        ICSP-1           14
  * SPI SCK     SCK          13 / ICSP-3   52        D13        ICSP-3           15
- *
- * More pin layouts for other boards can be found here: https://github.com/miguelbalboa/rfid#pin-layout
  */
 
 #include <SPI.h>
 #include <MFRC522.h>
 
-#define SS_PIN 10
-#define RST_PIN 9
+constexpr uint8_t RST_PIN = 9;     // Configurable, see typical pin layout above
+constexpr uint8_t SS_PIN = 10;     // Configurable, see typical pin layout above
  
 MFRC522 rfid(SS_PIN, RST_PIN); // Instance of the class
 
@@ -59,7 +57,7 @@ void setup() {
  
 void loop() {
 
-  // Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
+  // Look for new cards
   if ( ! rfid.PICC_IsNewCardPresent())
     return;
 
@@ -123,7 +121,7 @@ void printHex(byte *buffer, byte bufferSize) {
  */
 void printDec(byte *buffer, byte bufferSize) {
   for (byte i = 0; i < bufferSize; i++) {
-    Serial.print(' ');
+    Serial.print(buffer[i] < 0x10 ? " 0" : " ");
     Serial.print(buffer[i], DEC);
   }
 }

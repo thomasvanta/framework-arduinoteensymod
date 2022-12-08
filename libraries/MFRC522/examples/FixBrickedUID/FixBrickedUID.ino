@@ -20,17 +20,17 @@
  * SPI MOSI    MOSI         11 / ICSP-4   51        D11        ICSP-4           16
  * SPI MISO    MISO         12 / ICSP-1   50        D12        ICSP-1           14
  * SPI SCK     SCK          13 / ICSP-3   52        D13        ICSP-3           15
- *
- * More pin layouts for other boards can be found here: https://github.com/miguelbalboa/rfid#pin-layout
  */
 
 #include <SPI.h>
 #include <MFRC522.h>
+#include <MFRC522Hack.h>
 
-#define RST_PIN   9     // Configurable, see typical pin layout above
-#define SS_PIN    10    // Configurable, see typical pin layout above
+constexpr uint8_t RST_PIN = 9;     // Configurable, see typical pin layout above
+constexpr uint8_t SS_PIN = 10;     // Configurable, see typical pin layout above
 
-MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance
+MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance.
+MFRC522Hack mfrc522Hack(&mfrc522);  // Create MFRC522Hack instance.
 
 MFRC522::MIFARE_Key key;
 
@@ -48,7 +48,7 @@ void setup() {
 }
 
 void loop() {
-  if ( mfrc522.MIFARE_UnbrickUidSector(false) ) {
+  if ( mfrc522Hack.MIFARE_UnbrickUidSector(false) ) {
     Serial.println(F("Cleared sector 0, set UID to 1234. Card should be responsive again now."));
   }
   delay(1000);

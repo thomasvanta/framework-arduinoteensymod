@@ -85,7 +85,7 @@ class TwoWire : public Stream
 public:
 	// Hardware description struct
 	typedef struct {
-		uintptr_t clock_gate_register;
+		volatile uint32_t &clock_gate_register;
 		uint32_t clock_gate_mask;
 		uint8_t  sda_pin[5];
 		uint8_t  sda_mux[5];

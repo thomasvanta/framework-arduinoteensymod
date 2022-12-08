@@ -76,6 +76,7 @@ public:
 	}
 	bool isActive();
 	bool isSustain();
+	using AudioStream::release;
 	virtual void update(void);
 private:
 	uint16_t milliseconds2count(float milliseconds) {

@@ -1,6 +1,6 @@
 /*
  * Copy the RFID card data into variables and then 
- * scan the second empty card to copy all the data
+ * scan the second empty card to copy all the date
  * ----------------------------------------------------------------------------
  * Example sketch/program which will try the most used default keys listed in 
  * https://code.google.com/p/mfcuk/wiki/MifareClassicDefaultKeys to dump the
@@ -18,15 +18,13 @@
  * SPI MISO    MISO         12 / ICSP-1   50        D12        ICSP-1           14
  * SPI SCK     SCK          13 / ICSP-3   52        D13        ICSP-3           15
  *
- * More pin layouts for other boards can be found here: https://github.com/miguelbalboa/rfid#pin-layout
- *
  */
 
 #include <SPI.h>
 #include <MFRC522.h>
 
-#define RST_PIN         9           // Configurable, see typical pin layout above
-#define SS_PIN          10          // Configurable, see typical pin layout above
+constexpr uint8_t RST_PIN = 9;     // Configurable, see typical pin layout above
+constexpr uint8_t SS_PIN = 10;     // Configurable, see typical pin layout above
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
 
@@ -39,7 +37,7 @@ MFRC522::MIFARE_Key key;
 
 // Number of known default keys (hard-coded)
 // NOTE: Synchronize the NR_KNOWN_KEYS define with the defaultKeys[] array
-#define NR_KNOWN_KEYS   8
+constexpr uint8_t NR_KNOWN_KEYS = 8;
 // Known keys, see: https://code.google.com/p/mfcuk/wiki/MifareClassicDefaultKeys
 byte knownKeys[NR_KNOWN_KEYS][MFRC522::MF_KEY_SIZE] =  {
     {0xff, 0xff, 0xff, 0xff, 0xff, 0xff}, // FF FF FF FF FF FF = factory default
@@ -95,9 +93,9 @@ void dump_byte_array1(byte *buffer, byte bufferSize) {
  * @return true when the given key worked, false otherwise.
  */
  
-bool try_key(MFRC522::MIFARE_Key *key)
+boolean try_key(MFRC522::MIFARE_Key *key)
 {
-    bool result = false;
+    boolean result = false;
     
     for(byte block = 0; block < 64; block++){
       
